@@ -4,11 +4,23 @@
  * and open the template in the editor.
  */
 package rex1nlp;
+import java.io.File;
 import java.io.FileInputStream; 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream; 
 import opennlp.tools.namefind.NameFinderME; 
 import opennlp.tools.namefind.TokenNameFinderModel; 
 import opennlp.tools.util.Span;  
+import org.apache.tika.exception.TikaException;
+
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 public class rexNERex { 
    public static void main(String args[]) throws Exception{ 
@@ -21,20 +33,26 @@ public class rexNERex {
       NameFinderME nameFinder = new NameFinderME(model); 
     
       //Getting the sentence in the form of String array  
-      String [] sentence = new String[]{ 
-         "Mike", 
-         "and", 
-         "Smith", 
-         "are", 
-         "good", 
-         "friends" 
-      }; 
+           String target = "C:\\Users\\RexPC\\Documents\\Haily.docx";
+        
+        File document = new File(target);
+        Parser parser = new AutoDetectParser();
+        
+        ContentHandler handler = new BodyContentHandler();
+        Metadata metadata = new Metadata();
+      try {
+          parser.parse(new FileInputStream(document), handler, metadata, new ParseContext());
+          
+          
+        } catch (FileNotFoundException e) {
+        } catch (IOException | SAXException | TikaException e) {
+        }
+       //Finding the names in the sentence 
        
-      //Finding the names in the sentence 
-      Span nameSpans[] = nameFinder.find(sentence); 
+       //Finding the names in the sentence
        
-      //Printing the spans of the names in the sentence 
-      for(Span s: nameSpans) 
-         System.out.println(s.toString());    
-   }    
+      //Finding the names in the sentence
+  
+      System.out.println(handler);
 }      
+}

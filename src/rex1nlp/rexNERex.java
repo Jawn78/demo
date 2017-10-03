@@ -11,9 +11,13 @@ import java.io.IOException;
 import java.io.InputStream; 
 import opennlp.tools.namefind.NameFinderME; 
 import opennlp.tools.namefind.TokenNameFinderModel; 
-import opennlp.tools.util.Span;  
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
+import opennlp.tools.tokenize.WhitespaceTokenizer;
+import opennlp.tools.util.Span;
 import org.apache.tika.exception.TikaException;
-
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
@@ -24,35 +28,69 @@ import org.xml.sax.SAXException;
 
 public class rexNERex { 
    public static void main(String args[]) throws Exception{ 
-      //Loading the NER - Person model    
-      InputStream inputStream = new 
-         FileInputStream("C:\\Users\\RexPC\\Documents\\Programming\\Apache OpenNLP\\Models\\Original OpenNLP Models\\en-ner-person.bin"); 
-      TokenNameFinderModel model = new TokenNameFinderModel(inputStream);
-      
-      //Instantiating the NameFinder class 
-      NameFinderME nameFinder = new NameFinderME(model); 
+ 
     
       //Getting the sentence in the form of String array  
-           String target = "C:\\Users\\RexPC\\Documents\\Haily.docx";
+      String target = "C:\\Users\\RexPC\\Documents\\Haily.docx";
         
         File document = new File(target);
         Parser parser = new AutoDetectParser();
         
         ContentHandler handler = new BodyContentHandler();
         Metadata metadata = new Metadata();
-      try {
-          parser.parse(new FileInputStream(document), handler, metadata, new ParseContext());
-          
-          
-        } catch (FileNotFoundException e) {
-        } catch (IOException | SAXException | TikaException e) {
+      
+           
+         parser.parse(new FileInputStream(document), handler, metadata, new ParseContext());
+         
+       //  System.out.println(handler);
+         
+               //Loading the tokenizer model 
+      InputStream inputStreamTokenizer = new 
+         FileInputStream("C:\\Users\\RexPC\\Documents\\Programming\\Apache OpenNLP\\Models\\Original OpenNLP Models\\en-token.bin");
+      TokenizerModel tokenModel = new TokenizerModel(inputStreamTokenizer); 
+       
+      //Instantiating the TokenizerME class 
+      TokenizerME tokenizer = new TokenizerME(tokenModel); 
+       
+     //Tokenizing the sentence in to a string array  
+      String tokens[] = tokenizer.tokenize(handler.toString()); 
+         for(String tokenin: tokens)
+      System.out.println(tokenin);
+         
+         InputStream inputStreamNameFinder = new FileInputStream("C:\\Users\\RexPC\\Documents\\Programming\\Apache OpenNLP\\Models\\Original OpenNLP Models\\en-ner-person.bin");     
+         TokenNameFinderModel model = new TokenNameFinderModel(inputStreamNameFinder);
+      
+      //Instantiating the NameFinderME class 
+      NameFinderME nameFinder = new NameFinderME(model);       
+      
+      //Finding the names in the sentence 
+      Span nameSpans[] = nameFinder.find(tokens);        
+      
+      //Printing the names and their spans in a sentence 
+     // for(Span s: nameSpans)        
+     //    System.out.println(s.toString());  
+      
+       /*   
+       InputStream modelIn = new FileInputStream("C:\\Users\\RexPC\\Documents\\Programming\\Apache OpenNLP\\Models\\Original OpenNLP Models\\en-sent.bin");
+        SentenceModel stcmodel = null;
+        try {
+           stcmodel = new SentenceModel(modelIn);  
         }
-       //Finding the names in the sentence 
+        catch (IOException e) {
+        }
+      
+        //Instantiating the SentenceDetectorME class 
+SentenceDetectorME detector = new SentenceDetectorME(stcmodel);
+        
+  String sentences[];      
+       sentences = detector.sentDetect(handler.toString());     
+         
+      //Finding the names in the sentence 
+      Span nameSpans[] = nameFinder.find(sentences); 
        
-       //Finding the names in the sentence
-       
-      //Finding the names in the sentence
-  
-      System.out.println(handler);
+      //Printing the spans of the names in the sentence 
+      for(Span s: nameSpans) 
+         System.out.println(s.toString()); 
+*/
 }      
 }

@@ -90,10 +90,11 @@ public class rexNER5 {
       Span nameSpans[] = nameFinder.find(tokens);        
       
       //Printing the names and their spans in a sentence 
-  for(Span s: nameSpans)        
-      System.out.println(s.toString()+"  "+tokens[s.getStart()]);  
-  
-  
+      
+     for(Span s: nameSpans)        
+         
+     System.out.println(s.toString().indexOf("John")+"  "+tokens[s.getStart()]);  
+     
 }
 }
                

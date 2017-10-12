@@ -9,14 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import opennlp.tools.formats.ad.ADSentenceStream.Sentence;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.tokenize.Tokenizer;
-import opennlp.tools.tokenize.TokenizerFactory;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.Span;
@@ -69,10 +64,6 @@ public class rexNER5 {
             }
           }
         }
-      //SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
-      //  String sentences[] = sentenceDetector.sentDetect(handler.toString());
-
-        // System.out.println(sentences[0]);
       
      
       //Tokenizing the sentence in to a string array 
@@ -93,7 +84,7 @@ public class rexNER5 {
       
      for(Span s: nameSpans)        
          
-     System.out.println(s.toString().indexOf("John")+"  "+tokens[s.getStart()]);  
+     System.out.println(s.toString()+"  "+tokens[s.getStart()]);  
      
 }
 }

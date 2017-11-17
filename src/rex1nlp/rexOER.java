@@ -5,6 +5,10 @@
  */
 package rex1nlp;
 
+/**
+ *
+ * @author RexPC
+ */
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,12 +26,9 @@ import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.ContentHandler;
 
-/**
- *
- * @author RexPC
- */
-public class rexNER5 {
-         public static void main(String args[]) throws Exception{        
+
+public class rexOER {
+     public static void main(String args[]) throws Exception{        
       
       //Loading the tokenizer model 
       InputStream inputStreamTokenizer = new FileInputStream("C:\\Users\\RexPC\\Documents\\Programming\\Apache OpenNLP\\Models\\Original OpenNLP Models\\en-token.bin");
@@ -69,8 +70,8 @@ public class rexNER5 {
       String tokens[]; 
              tokens = tokenizer.tokenize(handler.toString());
        
-      //Loading the NER-person model 
-      InputStream inputStreamNameFinder = new  FileInputStream("C:\\Users\\RexPC\\Documents\\Programming\\Apache OpenNLP\\Models\\Original OpenNLP Models\\en-ner-person.bin");       
+      //Loading the org entity Reconition
+      InputStream inputStreamNameFinder = new  FileInputStream("C:\\Users\\RexPC\\Documents\\Programming\\Apache OpenNLP\\Models\\Original OpenNLP Models\\en-ner-organization.bin");       
       TokenNameFinderModel model8 = new TokenNameFinderModel(inputStreamNameFinder);
       
       //Instantiating the NameFinderME class 
@@ -87,5 +88,4 @@ public class rexNER5 {
      
 }
 }
-               
-  
+

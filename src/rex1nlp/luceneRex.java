@@ -6,7 +6,12 @@
  */
 package rex1nlp;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -24,10 +29,38 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 public class luceneRex {
    
+    
          
-      public static void main(String[] args) throws IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException {
+      public static void main(String[] args) throws IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException, TikaException, SAXException {
+            InputStream inputStreamTokenizer = new 
+         FileInputStream("C:\\Users\\RexPC\\Documents\\Programming\\Apache OpenNLP\\Models\\Original OpenNLP Models\\en-token.bin");
+      
+      TokenizerModel tokenModel = new TokenizerModel(inputStreamTokenizer); 
+       
+      //Instantiating the TokenizerME class 
+      TokenizerME tokenizer = new TokenizerME(tokenModel); 
+      
+      String target = "C:\\Users\\RexPC\\Documents\\Haily.docx";
+        
+        File document = new File(target);
+        Parser parser = new AutoDetectParser();
+        
+        ContentHandler handler = new BodyContentHandler();
+        Metadata metadata = new Metadata();
+           
+         parser.parse(new FileInputStream(document), handler, metadata, new ParseContext());
+          
+          
         // 0. Specify the analyzer for tokenizing text.
         //    The same analyzer should be used for indexing and searching
         StandardAnalyzer analyzer = new StandardAnalyzer();
@@ -38,14 +71,12 @@ public class luceneRex {
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
 
           try (IndexWriter w = new IndexWriter(index, config)) {
-              addDoc(w, "Lucene in Action", "193398817");
-              addDoc(w, "Lucene for Dummies", "55320055Z");
-              addDoc(w, "Managing Gigabytes", "55063554A");
-              addDoc(w, "The Art of Computer Science", "9900333X");
+              addDoc(w, handler.toString(), "193398817");
+           // System.out.println(handler.toString());
           }
 
         // 2. query
-        String querystr = args.length > 0 ? args[0] : "science";
+        String querystr = args.length > 0 ? args[0] : "Cigna";
 
         // the "title" arg specifies the default field to use
         // when no field is explicitly specified in the query.
@@ -76,6 +107,8 @@ public class luceneRex {
         // use a string field for isbn because we don't want it tokenized
         doc.add(new StringField("isbn", isbn, Field.Store.YES));
         w.addDocument(doc);
+        
+
     }
 }
     
